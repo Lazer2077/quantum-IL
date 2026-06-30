@@ -123,6 +123,10 @@ stable-baselines3) under one shared evaluation protocol, see
 Import probe:
 
 ```bash
+export COPPELIASIM_ROOT=/home/thing1/CoppeliaSim/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04
+export LD_LIBRARY_PATH="$COPPELIASIM_ROOT:$LD_LIBRARY_PATH"
+export QT_QPA_PLATFORM_PLUGIN_PATH="$COPPELIASIM_ROOT"
+export QT_QPA_PLATFORM=offscreen
 python scripts/evaluate_rlbench.py --dry-run-import
 ```
 
@@ -135,3 +139,28 @@ python scripts/evaluate_rlbench.py --checkpoint runs/latest/checkpoint.pt --task
 This is currently an integration test for the QBDP sampling path on RLBench
 rather than a benchmark result, because the default checkpoint is trained on
 synthetic data.
+
+## RLBench Imitation Diagnostic
+
+The optional script `scripts/rlbench_imitation.py` collects live
+low-dimensional RLBench demos and trains a behavior-cloning MLP to predict
+joint-velocity actions derived from adjacent demo frames:
+
+```bash
+python scripts/rlbench_imitation.py --task reach_target --demos 8 --train-steps 800 --eval-episodes 5 --max-steps 50
+```
+
+Initial smoke result on `reach_target` with CoppeliaSim offscreen:
+
+| Method | Success | Initial Distance | Final Distance |
+| --- | ---: | ---: | ---: |
+| Hold current | 0.00 | 0.511 | 0.511 |
+| BC, 8 demos | 0.00 | 0.542 | 0.778 |
+
+The offline validation action MSE was near zero, but online performance
+worsened. A direct diagnostic replay of demo-derived joint velocities reduced
+distance in some trials but did not reach success. This suggests the current
+demo-to-joint-velocity label reconstruction and naive BC policy are not enough
+for reliable RLBench imitation; a stronger path should use stored/generated
+expert actions in the executed action mode, DAgger-style corrections, or a
+task-specific low-level controller.

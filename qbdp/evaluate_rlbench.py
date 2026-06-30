@@ -110,7 +110,10 @@ def _make_environment(modules: RLBenchImport, dataset_root: str, headless: bool)
     if action_shape is None:
         action_shape = getattr(action_mode, "action_shape", None)
     if callable(action_shape):
-        action_shape = action_shape()
+        try:
+            action_shape = action_shape()
+        except TypeError:
+            action_shape = None
     if action_shape is None:
         action_dim = 8
     elif isinstance(action_shape, int):

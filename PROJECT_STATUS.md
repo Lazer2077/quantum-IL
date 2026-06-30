@@ -21,3 +21,7 @@
 - 2026-06-30T20:52:47+00:00: Added extensive multi-seed baseline sweep (4 envs incl. Ant-v4, 3 seeds, 100k SAC/PPO) to docs/BASELINE_COMPARISON.md; SAC dominates locomotion at budget, Ant survival-reward inversion noted.
 
 - 2026-06-30T22:21:26+00:00: Added Quantum-Born RL: the Born factorization trained as a pure RL algorithm (qbdp.models.quantum_rl + qbdp.experiments.quantum_rl, scripts/train_quantum_rl.py) via PPO policy gradient on Born modes + mode-conditioned diffusion actor + value critic; solves InvertedPendulum-v4 (eval 1000) from reward only. Docs in docs/QUANTUM_RL.md.
+
+- 2026-06-30T15:16:58-04:00: Installed and validated optional RLBench path with CoppeliaSim/PyRep environment setup and action-shape fallback.
+
+- 2026-06-30T15:30:51-04:00: Added optional RLBench low-dimensional imitation diagnostic and recorded initial reach_target BC rollout results.

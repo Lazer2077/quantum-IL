@@ -39,6 +39,16 @@ python -m pip install -e ".[mujoco]"
 python -m pip install -e ".[rlbench]"
 ```
 
+RLBench also needs CoppeliaSim/PyRep runtime libraries. For CoppeliaSim Edu
+4.1.0 installed under `/home/thing1/CoppeliaSim`, export:
+
+```bash
+export COPPELIASIM_ROOT=/home/thing1/CoppeliaSim/CoppeliaSim_Edu_V4_1_0_Ubuntu20_04
+export LD_LIBRARY_PATH="$COPPELIASIM_ROOT:$LD_LIBRARY_PATH"
+export QT_QPA_PLATFORM_PLUGIN_PATH="$COPPELIASIM_ROOT"
+export QT_QPA_PLATFORM=offscreen
+```
+
 ## Train and Evaluate
 
 The default evaluator scores the Born prior on held-out synthetic data:
@@ -59,6 +69,18 @@ The synthetic checkpoint dimensions may not match RLBench robot observations or
 actions. The RLBench script pads or truncates vectors so the interface can be
 tested, and it reports `obs_dim_mismatch` and `action_dim_mismatch` metrics when
 that happens.
+
+A small RLBench imitation experiment collects live low-dimensional demos for
+`reach_target`, trains a behavior-cloning MLP on joint-velocity actions derived
+from adjacent demo frames, and compares against a hold-current baseline:
+
+```bash
+python scripts/rlbench_imitation.py --task reach_target --demos 8 --train-steps 800 --eval-episodes 5 --max-steps 50
+```
+
+This is a fast diagnostic for the optional RLBench path rather than a solved
+benchmark. The derived joint-velocity labels can fit offline action MSE while
+still failing online due to covariate shift and imperfect action reconstruction.
 
 ## Compare Baselines
 

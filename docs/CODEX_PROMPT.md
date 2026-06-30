@@ -16,6 +16,10 @@ Priorities:
 - Keep default training and tests CPU-only with PyTorch and synthetic data.
 - Treat PennyLane, Minari, Gymnasium, MuJoCo, RoboMimic, ManiSkill, and RLBench
   as optional extensions.
+- Keep RLBench installation and CoppeliaSim/PyRep environment setup documented
+  as an optional path, separate from default synthetic training.
+- Treat `scripts/rlbench_imitation.py` as an optional RLBench smoke diagnostic;
+  report both offline imitation loss and online rollout metrics.
 - Maintain baselines for BC, CVAE, standard diffusion policy, and QBDP variants.
 - Maintain optional Gymnasium MuJoCo locomotion comparisons for BC, diffusion
   imitation-only, and diffusion imitation-plus-RL.
