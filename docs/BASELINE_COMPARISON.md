@@ -85,3 +85,54 @@ written with `--csv`.
   locomotion environments are never rendered (only `step`/`reset`).
 - `v4` ids were used because the available gymnasium is 0.29.1; the script
   defaults to the repo's `v5` ids on gymnasium >= 1.0.
+
+## Extensive Multi-Seed Sweep (4 envs × 3 seeds, 100k online steps)
+
+A larger, broader follow-up: a fourth environment (**Ant-v4**), three seeds per
+cell for error bars, an equal **100k** online-step budget for SAC and PPO
+(12.5× the 8000-step run), larger imitation budgets (20 demo episodes, 200
+imitation steps, 10 online RL episodes), and 10 evaluation episodes. Run as 12
+single-thread CPU jobs in parallel on an idle 64-core host; total wall time
+≈ 41 minutes.
+
+```bash
+# per (env, seed) job; aggregate across seeds afterwards
+python scripts/compare_baselines.py --envs <ENV> \
+  --rl-timesteps 100000 --eval-episodes 10 \
+  --demo-episodes 20 --il-steps 200 --rl-episodes 10 --max-steps 200 \
+  --hidden-dim 128 --batch-size 64 --diffusion-steps 20 --seed <SEED>
+```
+
+Mean ± std of episodic return across 3 seeds (10 eval episodes each):
+
+| Env | random | BC | diffusion_IL | diffusion_IL+RL | SAC (100k) | PPO (100k) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Hopper-v4 | 19±3 | 74±43 | 43±6 | 113±2 | **2056±1229** | 760±418 |
+| Walker2d-v4 | 1±1 | 40±18 | 67±10 | 166±85 | **1409±984** | 264±12 |
+| HalfCheetah-v4 | -302±15 | -2±0 | -1±0 | -1±0 | **3418±1622** | 478±104 |
+| Ant-v4 | -40±35 | 993±2 | 1000±3 | **1002±1** | 732±141 | 96±36 |
+
+### Interpretation
+
+- **With enough budget, online SAC dominates the locomotion tasks.** At 100k
+  steps SAC wins Hopper (2056), Walker2d (1409), and HalfCheetah (3418) by large
+  margins — an order of magnitude above the weak-expert imitation methods, whose
+  ceiling is the quality of the random-expert buffer.
+- **SAC variance is large at this budget** (Hopper ±1229, HalfCheetah ±1622):
+  100k is mid-training, so across seeds some runs have taken off and others are
+  still climbing. The means are not converged numbers.
+- **PPO ≪ SAC at equal budget.** On-policy PPO is far less sample-efficient; at
+  100k it still beats imitation on Hopper/HalfCheetah but trails SAC everywhere.
+- **Ant-v4 inverts the ranking, and that is informative.** Ant pays a ~+1
+  per-step survival reward, so simply staying upright for 1000 steps scores
+  ≈1000. The imitation methods learn exactly that passive-survival behavior
+  (≈1000), while undertrained SAC (732) and PPO (96) are still unstable and fall
+  early. This is a reward-structure-plus-budget artifact, not evidence that
+  imitation beats RL — at higher budgets SAC adds forward locomotion and passes
+  the survival floor.
+- **The online RL term in diffusion_IL+RL consistently helps** over plain
+  diffusion_IL / BC on Hopper and Walker2d.
+
+These remain research smoke results: 100k steps is well short of the
+hundreds-of-thousands-to-millions typically used to converge these tasks, and
+the imitation methods use a single deliberately weak random-expert buffer.
