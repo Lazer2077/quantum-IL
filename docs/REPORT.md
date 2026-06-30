@@ -101,6 +101,11 @@ intentionally tiny, these numbers are smoke-test comparisons rather than final
 research results. Longer runs should use real expert data from Minari/D4RL or
 another expert checkpoint.
 
+For a head-to-head against standard online-RL baselines (SAC and PPO from
+stable-baselines3) under one shared evaluation protocol, see
+[`docs/BASELINE_COMPARISON.md`](BASELINE_COMPARISON.md), produced by
+`scripts/compare_baselines.py`.
+
 ## RLBench Evaluation Path
 
 Import probe:

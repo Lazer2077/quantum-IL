@@ -15,3 +15,5 @@
 - 2026-06-23T17:17:25-04:00: Added normal script entry points for training, evaluation, synthetic comparison, and Gym locomotion experiments.
 
 - 2026-06-29T22:19:21-04:00: Added script-first RLBench import probe and optional QBDP rollout evaluator.
+
+- 2026-06-30T18:29:25+00:00: Added SAC/PPO baseline comparison (scripts/compare_baselines.py, qbdp.experiments.compare_baselines) under a unified eval protocol, with docs/BASELINE_COMPARISON.md results and a baselines optional extra.

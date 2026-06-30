@@ -72,6 +72,14 @@ Gymnasium MuJoCo locomotion smoke comparison:
 python scripts/gym_locomotion_diffusion_rl.py
 ```
 
+Compare the gym methods against SAC/PPO baselines (stable-baselines3) under one
+shared evaluation protocol; see [`docs/BASELINE_COMPARISON.md`](docs/BASELINE_COMPARISON.md):
+
+```bash
+python -m pip install -e ".[baselines]"
+python scripts/compare_baselines.py
+```
+
 Implemented policies:
 
 - QBDP with a classical Born-style prior and mode-conditioned DDPM denoiser.
