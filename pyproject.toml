@@ -1,0 +1,22 @@
+[project]
+name = "qbdp"
+version = "0.1.0"
+description = "Quantum-Born Diffusion Policy research prototype"
+requires-python = ">=3.10"
+dependencies = [
+  "torch",
+]
+
+[project.optional-dependencies]
+minari = ["minari"]
+robomimic = ["h5py"]
+quantum = ["pennylane"]
+mujoco = ["gymnasium[mujoco]"]
+rlbench = ["rlbench"]
+all = ["minari", "h5py", "pennylane", "gymnasium[mujoco]", "rlbench"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+include = ["qbdp*"]
