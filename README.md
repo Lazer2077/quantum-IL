@@ -80,9 +80,24 @@ python -m pip install -e ".[baselines]"
 python scripts/compare_baselines.py
 ```
 
+## Quantum-Born RL (reinforcement learning, not imitation)
+
+The same Born factorization can be trained as a pure RL algorithm — reward is the
+only signal, with no expert data and no imitation loss. The Born distribution
+`|psi_phi(b|o)|^2` becomes a discrete mode *policy*, a mode-conditioned one-step
+diffusion actor emits the action, and both are optimized by a PPO-clipped policy
+gradient with a value critic. See [`docs/QUANTUM_RL.md`](docs/QUANTUM_RL.md):
+
+```bash
+python -m pip install -e ".[baselines]"
+python scripts/train_quantum_rl.py --env InvertedPendulum-v4 --total-steps 60000
+```
+
 Implemented policies:
 
 - QBDP with a classical Born-style prior and mode-conditioned DDPM denoiser.
+- Quantum-Born actor-critic: the Born factorization trained by RL (policy
+  gradient on the Born modes + mode-conditioned diffusion actor + value critic).
 - Behavior cloning action-chunk regression.
 - CVAE action-chunk policy.
 - Standard diffusion-policy baseline without a Born prior.

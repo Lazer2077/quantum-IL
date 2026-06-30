@@ -19,3 +19,5 @@
 - 2026-06-30T18:29:25+00:00: Added SAC/PPO baseline comparison (scripts/compare_baselines.py, qbdp.experiments.compare_baselines) under a unified eval protocol, with docs/BASELINE_COMPARISON.md results and a baselines optional extra.
 
 - 2026-06-30T20:52:47+00:00: Added extensive multi-seed baseline sweep (4 envs incl. Ant-v4, 3 seeds, 100k SAC/PPO) to docs/BASELINE_COMPARISON.md; SAC dominates locomotion at budget, Ant survival-reward inversion noted.
+
+- 2026-06-30T22:21:26+00:00: Added Quantum-Born RL: the Born factorization trained as a pure RL algorithm (qbdp.models.quantum_rl + qbdp.experiments.quantum_rl, scripts/train_quantum_rl.py) via PPO policy gradient on Born modes + mode-conditioned diffusion actor + value critic; solves InvertedPendulum-v4 (eval 1000) from reward only. Docs in docs/QUANTUM_RL.md.

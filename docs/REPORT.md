@@ -50,6 +50,18 @@ Rollout-guided amplitude refinement is implemented as:
 psi_i' = normalize(psi_i * exp(eta * R_i / 2))
 ```
 
+## Quantum-Born RL Variant
+
+The same factorization is also trained as a reinforcement-learning algorithm in
+`qbdp.experiments.quantum_rl` (model in `qbdp.models.quantum_rl`): the Born
+distribution becomes a discrete mode policy, a mode-conditioned one-step
+diffusion actor emits the continuous action, and a value critic supports a
+PPO-clipped policy gradient. Reward is the only signal — no expert data, no
+imitation loss. The amplitude-refinement rule above is the closed-form
+mirror-descent version of this online Born-policy gradient. On `InvertedPendulum-v4`
+the deterministic policy reaches the task maximum (1000) within 40k steps from a
+near-random start; see [`docs/QUANTUM_RL.md`](QUANTUM_RL.md).
+
 Dataset extensions are optional:
 
 - Minari/D4RL MuJoCo loader via `qbdp.data.minari_loader`.
